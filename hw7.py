@@ -1,8 +1,8 @@
 
-from argparse import RawDescriptionHelpFormatter
-from ast import While
+from operator import itemgetter
 from functools import reduce
-import re
+from re import I
+
 
 
 class File_manager:
@@ -77,8 +77,36 @@ def create_cookbook (file_name):
         line_rate += 1
     return cook_book
 
+def get_shop_list_by_dishes (dishes,person_count,cookboock = create_cookbook('recipes.txt')):
 
+    shop_list = []
+    for i in dishes:
+        if i in cookboock.keys():
+            shop_list += cookboock[i]
+        else:
+            print('Рецепт не найден')
 
-filetest = File_manager('testfile.txt','r')
-print(filetest.readlines(0))
-print (create_cookbook('recipes.txt'))
+    shop_list.sort(key = itemgetter('ingredient_name'))
+    
+    for i in range (len(shop_list)):
+        try:
+            while shop_list[i]['ingredient_name'] == shop_list[i + 1]['ingredient_name']:
+                shop_list[i]['quantity'] = shop_list[i]['quantity'] + shop_list[i + 1]['quantity']
+                shop_list.pop(i + 1)
+        except:
+            pass
+        
+    for i in range(len(shop_list)):
+        shop_list[i]['quantity'] = shop_list[i]['quantity'] * person_count
+
+    shop_dict = {}
+    for i in shop_list:
+        items = list(i.items())
+        shop_dict.update({i['ingredient_name']:{items[2][0]:items[2][1],items[1][0]:items[1][1]}})
+    
+    return shop_dict
+
+print(get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'],2))
+#filetest = File_manager('testfile.txt','r')
+#print(filetest.readlines(0))
+#print (create_cookbook('recipes.txt'))
