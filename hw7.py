@@ -61,7 +61,7 @@ def create_cookbook (file_name):
         recip = []
 
         while (len(recipfile.readlines(line_rate)) != 1) and recipfile.readlines(line_rate) != '\n':
-            recip.append(recipfile.readlines(line_rate)[:-1])
+            recip.append(recipfile.readlines(line_rate).rstrip('\n'))
             line_rate += 1
             if recipfile.readlines(line_rate) == None:
                 break
